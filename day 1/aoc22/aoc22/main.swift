@@ -40,3 +40,10 @@ if args.count < 2 {
 }
 
 
+func mostCalories(fileURL: URL) -> Int {
+    return 0
+}
+
+func topThreeCalories(fileURL: URL) -> [Int] {
+    return [0]
+}
