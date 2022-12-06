@@ -53,47 +53,60 @@ if args.count < 2 {
 private func playRound(round: String) -> Int {
     if round.count != 3 { return 0 }
     let theirPlay = playFromString(letter: round.first!)
-    let myPlay = playFromString(letter: round.last!)
-    return scoreFrom(theirPlay: theirPlay, and: myPlay)
+    let theResult = resultFromString(letter: round.last!)
+    return scoreFrom(theirPlay: theirPlay, and: theResult)
 }
 
 private func playFromString(letter: Character) -> Play {
     switch letter {
-    case "A", "X", "a", "x":
+    case "A", "a":
         return .rock
-    case "B", "Y", "b", "y":
+    case "B", "b":
         return .paper
-    case "C", "Z", "c", "z":
+    case "C", "c":
         return .scissors
     default:
         return .rock
     }
 }
 
-private func scoreFrom(theirPlay: Play, and myPlay: Play) -> Int {
-    let myPlayScore = myPlay.rawValue
-    let resultScore = fight(me: myPlay, them: theirPlay).rawValue
+private func resultFromString(letter: Character) -> Result {
+    switch letter {
+    case "X", "x":
+        return .lose
+    case "Y", "y":
+        return .draw
+    case "Z", "z":
+        return .win
+    default:
+        return .lose
+    }
+}
+
+private func scoreFrom(theirPlay: Play, and theResult: Result) -> Int {
+    let myPlayScore = fight(result: theResult, them: theirPlay).rawValue
+    let resultScore = theResult.rawValue
     return (myPlayScore + resultScore)
 }
 
-private func fight(me: Play, them: Play) -> Result {
-    if (me == them) { return .draw }
-    let turn = (me, them)
+private func fight(result: Result, them: Play) -> Play {
+    if (result == .draw) { return them }
+    let turn = (result, them)
     switch turn {
-    case (.rock, .paper):
-        return .lose
-    case (.rock, .scissors):
-        return .win
-    case (.paper, .rock):
-        return .win
-    case (.paper, .scissors):
-        return .lose
-    case (.scissors, .rock):
-        return .lose
-    case (.scissors, .paper):
-        return .win
-    case (.scissors, .scissors),(.paper, .paper),(.rock, .rock):
-        return .draw
+    case(.lose, .rock):
+        return .scissors
+    case(.lose, .paper):
+        return .rock
+    case(.lose, .scissors):
+        return .paper
+    case(.win, .rock):
+        return .paper
+    case(.win, .paper):
+        return .scissors
+    case(.win, .scissors):
+        return .rock
+    case (.draw, _):
+        return .rock // I hate that I need to do this
     }
 }
 
