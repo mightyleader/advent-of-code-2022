@@ -22,8 +22,23 @@ if args.count < 2 {
         let fileData = try Data(contentsOf: fileURL)
         if let stringData = String(data: fileData, encoding: .utf8) {
             let rucksacks = Array(stringData.components(separatedBy: "\n"))
-            let total = rucksacks.map{ priorityFromRucksack(rucksack: $0) }.reduce(0,+)
-            print(total)
+//            let total = rucksacks.map{ priorityFromRucksack(rucksack: $0) }.reduce(0,+)
+            var group = [String]()
+            var container = [[String]]()
+            var index = 0
+            for rucksack in rucksacks {
+                group.append(rucksack)
+                if (index == 2)
+                {
+                    container.append(group)
+                    group.removeAll()
+                    index = 0
+                } else {
+                    index += 1
+                }
+            }
+            print(priorityFromRucksacks(rucksacks: container))
+            
         } else {
             print("ERROR: Could not parse data from file.")
         }
@@ -33,24 +48,15 @@ if args.count < 2 {
     }
 }
 
-func priorityFromRucksack(rucksack: String) -> Int {
+func priorityFromRucksacks(rucksacks: [[String]]) -> Int {
     let prioritizedValues = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     var count = 0
-    if (rucksack.count >= 2) {
-        let length = Int(rucksack.count / 2)
-        //split into 2 sets of characters
-        let index = rucksack.index(rucksack.startIndex, offsetBy: length)
-        let leftSide = rucksack[...index]
-        let rightSide = rucksack[index...]
-        //calculate intersection
-        for char in leftSide {
-            if let index = rightSide.firstIndex(of: char) {
-                count = prioritizedValues.firstIndex(of: char)!.utf16Offset(in: prioritizedValues) + 1
-                print("\(char) at: \(count)")
-                break
-            }
-        }
-        
+    for trio in rucksacks {
+        let firstCompare = Set(trio[0]).intersection(trio[1])
+        let secondCompare = firstCompare.intersection(trio[2])
+        let priorityValue = (prioritizedValues.firstIndex(of: secondCompare.first!)?.utf16Offset(in: prioritizedValues) ?? 0) + 1
+        count += priorityValue
+        print("\(secondCompare) gives: \(priorityValue )")
     }
     return count
 }
