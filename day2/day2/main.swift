@@ -52,7 +52,7 @@ if args.count < 2 {
 
 private func playRound(round: String) -> Int {
     if round.count != 3 { return 0 }
-    let theirPlay = playFromString(letter: round.first!)
+    let theirPlay = playFromString(letter: round.first!) //Hacky force unwrap :(
     let theResult = resultFromString(letter: round.last!)
     return scoreFrom(theirPlay: theirPlay, and: theResult)
 }
