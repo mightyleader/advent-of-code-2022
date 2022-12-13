@@ -41,8 +41,8 @@ func parseFileData(data: Data) -> Int {
             if $0.count < 2 { return 0 }
             let range1 = Range($0[0][0]!...$0[0][1]!)
             let range2 = Range($0[1][0]!...$0[1][1]!)
-            if (range1.contains(range2)) || range2.contains(range1) {
-                print("MATCH: \(range1) - \(range2)")
+            if (range1.overlaps(range2)) {
+                print("OVERLAP: \(range1) - \(range2)")
                 return 1
             }
             return 0
