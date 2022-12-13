@@ -68,10 +68,9 @@ func process(instructions instr: [Int]) -> Void {
     if instr[0] == 0 || instr[1] == 0 || instr[2] == 0 { return }
     var source = stacks[instr[1] - 1]
     var destination = stacks[instr[2] - 1]
-    let upperBound = instr[0]
-    for _ in 0..<upperBound {
-        destination.append(source.popLast()!)
-    }
+    let range = instr[0]
+    destination.append(contentsOf: source[(source.count - range)...])
+    source.removeLast(range)
     stacks[instr[1] - 1] = source
     stacks[instr[2] - 1] = destination
 }
