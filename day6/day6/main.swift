@@ -22,7 +22,7 @@ if args.count < 2 {
         let fileData = try Data(contentsOf: fileURL)
         if let stringFromData = String(data: fileData, encoding: .utf8) {
             let index = indexOf(messageBody: stringFromData)
-            print(index + 4)
+            print(index + 14)
         }
     } catch {
         print("ERROR: Could not read data from the file at: " + path)
@@ -32,8 +32,8 @@ if args.count < 2 {
 func indexOf(messageBody string: String) -> Int {
     var mutableString = string
     for index in string.indices {
-        let comparisonPrefix = mutableString.prefix(4)
-        if Set(comparisonPrefix).count == 4 {
+        let comparisonPrefix = mutableString.prefix(14)
+        if Set(comparisonPrefix).count == 14 {
             return index.utf16Offset(in: string)
         }
         mutableString = String(mutableString.dropFirst())
