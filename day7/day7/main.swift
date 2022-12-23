@@ -30,6 +30,7 @@ class Node {
         }
     }
 
+    //not sure about the sizing logic here...
     func add(child: Node) {
         child.parent = self
         children.append(child)
@@ -77,17 +78,16 @@ func parse(instructions: [String]) -> Void {
             case "$":
                 switch instructionElements[1] {
                 case "cd":
-//                    print("Change directory to " + instructionElements[2])
-                    //Change current active node
-                    //look for matching active node
+                    //cd..
                     if instructionElements[2] == ".." {
                         activeNode = activeNode.parent ?? activeNode
                     }
+                    //cd dirname
                     if (activeNode.name != instructionElements[2]) {
                         let newActiveNode = activeNode.children.first( where: { $0.name == instructionElements[2] })
                         activeNode = newActiveNode ?? activeNode
                     }
-                    //look for match in children
+                    print("Changed directory to \(activeNode.name)")
 //                case "ls":
 //                    print("List directory contents...")
                     //Enable create mode OR do nothing and assume that every output entry == a create statement HMMMM 🤔
@@ -96,15 +96,15 @@ func parse(instructions: [String]) -> Void {
                 }
                 
             case "dir":
-//                print("Directory - " + instructionElements[1])
                 //Create a Directory Node
                 let directoryNode = Node(instructionElements[1], type: .Directory)
                 activeNode.add(child: directoryNode)
+                print("Directory \(directoryNode.name) added to \(activeNode.name).")
             default:
-//                print("File - " + instructionElements[1] + ", Size - " + instructionElements[0])
                 //Create File Node
                 let fileNode = Node(instructionElements[1], type: .File, size: Int(instructionElements[0]) ?? 0)
                 activeNode.add(child: fileNode)
+                print("File \(fileNode.name) added to \(activeNode.name).")
             }
         }
     }
